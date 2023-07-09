@@ -1,0 +1,85 @@
+syntax="proto3";
+
+package disc;
+import "google/protobuf/descriptor.proto";
+extend google.protobuf.FieldOptions {
+  int32 max_length = 50001;
+}
+
+service RegisterService{
+    rpc register(Server) returns (Result);
+    rpc get_client_list(void) returns (Server_list);
+}
+
+service JoinService{
+    rpc join(JoinReq) returns (Result);
+    rpc leave(JoinReq) returns (Result);
+
+}
+
+service ArticlesService{
+    rpc publishArticles(ArticleProposal) returns (Result);
+    rpc getArticles(ArticlesRequest) returns (Articles_list);
+}
+
+
+message void{} 
+
+
+message ArticlesRequest{
+    enum ArticleType{
+        None=0;
+        SPORTS=1;
+        FASHION=2;
+        POLITICS=3;
+    }
+
+    ArticleType type=1;
+    string author=2;
+    string time=3;
+    string client_name=4;
+}
+
+message Articles{
+    
+    string type=1;
+    string author=2;
+    string time=3;
+    string content=4;
+}
+
+message ArticleProposal{
+    enum ArticleType{
+        None=0;
+        SPORTS=1;
+        FASHION=2;
+        POLITICS=3;
+    }
+    
+    ArticleType type=1;
+    string author=2;
+    string content=3[(max_length) = 200];
+    string client_name=4;
+}
+
+message Server{
+    string server_name=1;
+    string server_address=2;
+}
+
+message JoinReq {
+    string client_name = 1;
+    string server_address =2;
+}
+
+message Server_list{
+    repeated Server server_list=1;
+}
+
+message Articles_list{
+    repeated Articles articles_list=1;
+}
+
+message  Result{
+    string result=1;
+}
